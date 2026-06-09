@@ -71,12 +71,9 @@ def process_data(df):
     # Remove exact duplicate records
     df = df.drop_duplicates()
 
-    # Fill missing values in numeric columns
+    # Fill missing values in numeric columns with their respective medians
     numeric_columns = df.select_dtypes(include=["number"]).columns
-
-    for col in numeric_columns:
-        # Replace null values with column median
-        df[col] = df[col].fillna(df[col].median())
+    df[numeric_columns] = df[numeric_columns].fillna(df[numeric_columns].median())
 
     # Add metadata column indicating processing occurred
     df["processed_flag"] = True
