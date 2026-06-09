@@ -1,0 +1,4 @@
+[INFO] Loaded 5 rows from data/raw/sample.csv
+[SUCCESS] Data successfully processed
+[SUCCESS] Rows processed: 4
+[SUCCESS] Output saved to output/processed.csv

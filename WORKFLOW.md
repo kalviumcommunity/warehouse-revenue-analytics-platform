@@ -3,14 +3,17 @@
 ## Branching Strategy
 
 ### Main Branch
+
 - **Main** branch holds only releasable, production-ready code
 - Direct commits to main are prohibited
 - All work flows through feature branches and pull requests
 
 ### Feature Branch Naming Convention
+
 Branches follow the pattern: `[type]/[short-description]`
 
 **Types:**
+
 - `feature/` - new capabilities or analytics features
 - `fix/` - bug fixes
 - `docs/` - documentation only
@@ -18,6 +21,7 @@ Branches follow the pattern: `[type]/[short-description]`
 - `chore/` - maintenance tasks, dependency updates
 
 **Examples:**
+
 - `feature/customer-churn-prediction`
 - `fix/revenue-calculation-bug`
 - `docs/data-dictionary-update`
@@ -25,6 +29,7 @@ Branches follow the pattern: `[type]/[short-description]`
 - `chore/update-requirements`
 
 ### Branch Lifecycle
+
 1. Create feature branch from main: `git checkout -b feature/description`
 2. Work and commit on feature branch
 3. Push to GitHub: `git push origin feature/description`
@@ -38,6 +43,7 @@ Branches follow the pattern: `[type]/[short-description]`
 ## Commit Message Convention
 
 ### Format
+
 ```
 [type]: [description]
 
@@ -45,22 +51,25 @@ Branches follow the pattern: `[type]/[short-description]`
 ```
 
 ### Types
-| Type | Usage | Example |
-|------|-------|---------|
-| **feat** | New feature or capability | `feat: add revenue anomaly detection algorithm` |
-| **fix** | Bug fix or correction | `fix: correct null percentage calculation in profiler` |
-| **docs** | Documentation changes only | `docs: add data ingestion process to README` |
-| **refactor** | Code cleanup, no behavior change | `refactor: extract CSV validation into utils module` |
-| **test** | Add or modify tests | `test: add unit tests for revenue aggregation` |
-| **chore** | Maintenance, dependencies | `chore: update pandas to 2.0 in requirements.txt` |
+
+| Type         | Usage                            | Example                                                |
+| ------------ | -------------------------------- | ------------------------------------------------------ |
+| **feat**     | New feature or capability        | `feat: add revenue anomaly detection algorithm`        |
+| **fix**      | Bug fix or correction            | `fix: correct null percentage calculation in profiler` |
+| **docs**     | Documentation changes only       | `docs: add data ingestion process to README`           |
+| **refactor** | Code cleanup, no behavior change | `refactor: extract CSV validation into utils module`   |
+| **test**     | Add or modify tests              | `test: add unit tests for revenue aggregation`         |
+| **chore**    | Maintenance, dependencies        | `chore: update pandas to 2.0 in requirements.txt`      |
 
 ### Guidelines
+
 - Keep message under 72 characters when possible
 - Use imperative mood: "add" not "added", "fix" not "fixed"
 - Explain the "why" in the body, not just the "what"
 - Reference issue numbers in body: `Closes #123`
 
 ### Example Commits
+
 ```
 feat: implement data quality scoring system
 
@@ -91,11 +100,13 @@ for customer, transaction, and revenue tables.
 ## Pull Request Process
 
 ### When to Create a PR
+
 - Feature branch has at least 1-3 commits
 - Code is tested and ready for review
 - Related GitHub issue exists
 
 ### PR Description Template
+
 ```
 ## Summary
 [1-2 sentence overview of what changed]
@@ -118,12 +129,14 @@ Closes #[issue-number]
 ```
 
 ### Merge Requirements
+
 - **Minimum 1 approval** from a team member
 - **All commits** reviewed and understood
 - **Commit messages** checked for clarity
 - **Tests pass** (when applicable)
 
 ### After Merge
+
 - Feature branch is deleted
 - Related issue is automatically closed
 - Work moves to "Done"
@@ -133,6 +146,7 @@ Closes #[issue-number]
 ## GitHub Issue Tracking
 
 ### Issue Lifecycle
+
 1. **Create** issue in GitHub with clear title and description
 2. **Assign** to responsible team member
 3. **Label** with category (feature, bug, documentation, etc.)
@@ -140,7 +154,9 @@ Closes #[issue-number]
 5. **Close** automatically when PR is merged (via "Closes #123" in PR description)
 
 ### Issue Requirements
+
 Every issue must have:
+
 - **Title**: Action-oriented and specific
   - ✅ "Ingest customer transaction data into pipeline"
   - ❌ "data ingestion"
@@ -149,6 +165,7 @@ Every issue must have:
 - **Assignee**: Single responsible person
 
 ### Label Categories
+
 - `feature` - new capability
 - `bug` - something broken
 - `documentation` - docs only
@@ -162,6 +179,7 @@ Every issue must have:
 ## Team Responsibilities
 
 ### As a Contributor
+
 1. Create or pick an issue from the backlog
 2. Assign issue to yourself
 3. Create feature branch with proper naming
@@ -173,6 +191,7 @@ Every issue must have:
 9. Wait for approval before merge
 
 ### As a Reviewer
+
 1. Review code for: correctness, clarity, data integrity
 2. Check commit messages follow convention
 3. Verify issue link in PR description
@@ -185,6 +204,7 @@ Every issue must have:
 ## Quick Reference
 
 ### Creating Work
+
 ```
 1. Create GitHub issue
 2. git checkout -b feature/description
@@ -195,6 +215,7 @@ Every issue must have:
 ```
 
 ### Reviewing Work
+
 ```
 1. Read PR description and issue
 2. Review commits and commit messages
@@ -204,6 +225,7 @@ Every issue must have:
 ```
 
 ### Merging Work
+
 ```
 1. PR has 1+ approval
 2. Commit messages reviewed
@@ -222,3 +244,78 @@ Every issue must have:
 ✅ **Quality**: Code review catches bugs before production  
 ✅ **History**: Clear commit messages let future you (or teammates) understand decisions  
 ✅ **Rollback**: Bad changes can be reverted with a single commit
+
+# Python Data Workflow
+
+## Overview
+
+This workflow converts raw CSV data into a cleaned, analysis-ready dataset using a modular Python script.
+
+## Execution
+
+Run the workflow from the project root:
+
+```bash
+python scripts/data_workflow.py
+```
+
+## Functions
+
+### ingest_data(filepath)
+
+Purpose:
+
+- Reads a CSV file from disk.
+- Loads the data into a Pandas DataFrame.
+
+Input:
+
+- File path to CSV dataset.
+
+Output:
+
+- Raw Pandas DataFrame.
+
+### process_data(df)
+
+Purpose:
+
+- Removes duplicate records.
+- Fills missing numeric values with median values.
+- Adds processing metadata.
+
+Input:
+
+- Raw Pandas DataFrame.
+
+Output:
+
+- Cleaned Pandas DataFrame.
+
+### output_results(df, output_path)
+
+Purpose:
+
+- Saves processed data to a CSV file.
+- Prints execution summary.
+
+Input:
+
+- Processed DataFrame.
+- Output file path.
+
+Output:
+
+- CSV file written to disk.
+
+## Modifying For New Datasets
+
+1. Replace `data/raw/sample.csv` with a new dataset.
+2. Update transformation logic inside `process_data()`.
+3. Add validation rules as needed.
+4. Adjust output formats (CSV, JSON, database export) in `output_results()`.
+
+## Generated Files
+
+- `output/processed.csv`
+- `output/sample_run.txt`
