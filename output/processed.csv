@@ -1,0 +1,5 @@
+id,name,score,processed_flag
+1,Alice,90.0,True
+2,Bob,85.0,True
+3,Charlie,90.0,True
+4,Diana,95.0,True
