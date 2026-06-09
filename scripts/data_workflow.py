@@ -68,6 +68,9 @@ def process_data(df):
         - DataFrame is not empty.
     """
 
+    # Create a copy to avoid modifying the input DataFrame in-place
+    df = df.copy()
+
     # Remove exact duplicate records
     df = df.drop_duplicates()
 
