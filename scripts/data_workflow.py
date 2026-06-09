@@ -123,4 +123,6 @@ if __name__ == "__main__":
         output_results(processed_data, output_file)
 
     except Exception as error:
-        print(f"[ERROR] Workflow failed: {error}")
+        import sys
+        print(f"[ERROR] Workflow failed: {error}", file=sys.stderr)
+        sys.exit(1)
