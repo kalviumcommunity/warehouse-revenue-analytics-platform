@@ -1,0 +1,16 @@
+{
+  "timestamp": "2026-06-09T15:37:51.729167",
+  "filepath": "data/raw/sample.csv",
+  "validations": {
+    "file_exists": "PASS - File exists and has content",
+    "format": "PASS - Format valid: csv",
+    "schema": "FAIL - Missing columns: {'customer_name', 'transaction_amount', 'customer_id', 'transaction_date'} | Unexpected columns: {'name', 'id', 'score'}",
+    "encoding": "PASS - Detected: ascii (confidence: 100.0%)"
+  },
+  "statistics": {
+    "rows": 5,
+    "columns": 3,
+    "file_size_mb": 7e-05,
+    "bytes": 71
+  }
+}
