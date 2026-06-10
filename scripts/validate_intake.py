@@ -149,42 +149,67 @@ def generate_intake_report(filepath, expected_columns):
         "timestamp": datetime.now().isoformat(),
         "filepath": filepath,
         "validations": {},
+        "overall_status": "passed",
     }
 
     # File existence validation
 
     file_exists, msg = validate_file_exists(filepath)
 
-    report["validations"]["file_exists"] = msg
+    report["validations"]["file_exists"] = {
+        "status": "passed" if file_exists else "failed",
+        "message": msg,
+    }
 
     if not file_exists:
+        report["overall_status"] = "failed"
+        with open("output/intake_report.json", "w", encoding="utf-8") as f:
+            json.dump(report, f, indent=2)
         return report
 
     # File format validation
 
-    _, msg = validate_file_format(filepath)
+    format_valid, msg = validate_file_format(filepath)
 
-    report["validations"]["format"] = msg
+    report["validations"]["format"] = {
+        "status": "passed" if format_valid else "failed",
+        "message": msg,
+    }
+
+    if not format_valid:
+        report["overall_status"] = "failed"
+        with open("output/intake_report.json", "w", encoding="utf-8") as f:
+            json.dump(report, f, indent=2)
+        return report
 
     # Load dataset
 
-    df = pd.read_csv(filepath)
+    df = pd.read_csv(filepath, encoding="utf-8")
 
     # Schema validation
 
-    _, msg = validate_schema(df, expected_columns)
+    schema_valid, msg = validate_schema(df, expected_columns)
 
-    report["validations"]["schema"] = msg
+    report["validations"]["schema"] = {
+        "status": "passed" if schema_valid else "failed",
+        "message": msg,
+    }
 
     # Encoding detection
 
     _, msg = detect_encoding(filepath)
 
-    report["validations"]["encoding"] = msg
+    report["validations"]["encoding"] = {
+        "status": "passed",
+        "message": msg,
+    }
 
     # Dataset statistics
 
     report["statistics"] = capture_dataset_stats(filepath, df)
+
+    if not all(item["status"] == "passed" for item in report["validations"].values()):
+        report["overall_status"] = "failed"
 
     # Create output directory if needed
     os.makedirs("output", exist_ok=True)
@@ -201,10 +226,11 @@ if __name__ == "__main__":
     filepath = "data/raw/sample.csv"
 
     expected_columns = [
-        "customer_id",
-        "customer_name",
-        "transaction_amount",
-        "transaction_date",
+        "order_id",
+        "warehouse_id",
+        "preparation_time_min",
+        "packing_accuracy_pct",
+        "delivery_complaints",
     ]
 
     try:

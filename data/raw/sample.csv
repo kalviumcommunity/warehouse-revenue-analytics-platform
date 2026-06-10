@@ -1,6 +1,4 @@
-id,name,score
-1,Alice,90
-2,Bob,85
-3,Charlie,
-3,Charlie,
-4,Diana,95
+order_id,warehouse_id,preparation_time_min,packing_accuracy_pct,delivery_complaints
+1001,W1,18,98.5,0
+1002,W2,22,96.0,1
+1003,W1,19,97.4,0
