@@ -1,16 +1,29 @@
 {
-  "timestamp": "2026-06-09T15:37:51.729167",
+  "timestamp": "2026-06-10T11:59:42.700757",
   "filepath": "data/raw/sample.csv",
   "validations": {
-    "file_exists": "PASS - File exists and has content",
-    "format": "PASS - Format valid: csv",
-    "schema": "FAIL - Missing columns: {'customer_name', 'transaction_amount', 'customer_id', 'transaction_date'} | Unexpected columns: {'name', 'id', 'score'}",
-    "encoding": "PASS - Detected: ascii (confidence: 100.0%)"
+    "file_exists": {
+      "status": "passed",
+      "message": "PASS - File exists and has content"
+    },
+    "format": {
+      "status": "passed",
+      "message": "PASS - Format valid: csv"
+    },
+    "schema": {
+      "status": "passed",
+      "message": "PASS - Schema valid: 5 columns present"
+    },
+    "encoding": {
+      "status": "passed",
+      "message": "PASS - Detected: ascii (confidence: 100.0%)"
+    }
   },
+  "overall_status": "passed",
   "statistics": {
-    "rows": 5,
-    "columns": 3,
-    "file_size_mb": 7e-05,
-    "bytes": 71
+    "rows": 3,
+    "columns": 5,
+    "file_size_mb": 0.00013,
+    "bytes": 140
   }
 }
