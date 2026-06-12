@@ -1,0 +1,113 @@
+{
+  "dataset_shape": {
+    "rows": 10,
+    "columns": 6
+  },
+  "null_profile": {
+    "null_counts": {
+      "order_id": 0,
+      "warehouse_id": 3,
+      "workflow_type": 0,
+      "preparation_time_min": 1,
+      "packing_accuracy_pct": 1,
+      "delivery_complaints": 1
+    },
+    "null_percentages": {
+      "order_id": 0.0,
+      "warehouse_id": 30.0,
+      "workflow_type": 0.0,
+      "preparation_time_min": 10.0,
+      "packing_accuracy_pct": 10.0,
+      "delivery_complaints": 10.0
+    },
+    "exact_duplicate_count": 1,
+    "duplicate_percentage": 10.0
+  },
+  "numerical_profile": {
+    "order_id": {
+      "min": 1001.0,
+      "max": 1010.0,
+      "mean": 1005.4,
+      "median": 1005.5,
+      "std": 3.13,
+      "null_count": 0.0
+    },
+    "preparation_time_min": {
+      "min": -5.0,
+      "max": 30.0,
+      "mean": 18.78,
+      "median": 21.0,
+      "std": 9.74,
+      "null_count": 1.0
+    },
+    "packing_accuracy_pct": {
+      "min": 85.0,
+      "max": 110.0,
+      "mean": 94.39,
+      "median": 94.0,
+      "std": 7.24,
+      "null_count": 1.0
+    },
+    "delivery_complaints": {
+      "min": 0.0,
+      "max": 6.0,
+      "mean": 2.44,
+      "median": 2.0,
+      "std": 2.19,
+      "null_count": 1.0
+    }
+  },
+  "categorical_profile": {
+    "warehouse_id": {
+      "unique_count": 5,
+      "top_values": {
+        "<NA>": 3,
+        "W1": 2,
+        "W2": 2,
+        "W3": 1,
+        "W4": 1
+      },
+      "null_count": 3
+    },
+    "workflow_type": {
+      "unique_count": 4,
+      "top_values": {
+        "Picking": 3,
+        "Packaging": 3,
+        "Sorting": 2,
+        "Packing": 2
+      },
+      "null_count": 0
+    }
+  },
+  "quality_issues": [
+    {
+      "type": "High nulls",
+      "column": "warehouse_id",
+      "severity": "HIGH",
+      "value": "30.0% missing",
+      "recommendation": "Consider imputation or column exclusion before analysis"
+    },
+    {
+      "type": "High duplicates",
+      "column": "Full row",
+      "severity": "HIGH",
+      "value": "10.0% duplicated",
+      "recommendation": "Deduplicate records before downstream analysis"
+    },
+    {
+      "type": "Invalid range",
+      "column": "preparation_time_min",
+      "severity": "HIGH",
+      "value": "1 negative value(s)",
+      "recommendation": "Review and correct invalid negative business values"
+    },
+    {
+      "type": "Invalid range",
+      "column": "packing_accuracy_pct",
+      "severity": "HIGH",
+      "value": "1 out-of-range value(s)",
+      "recommendation": "Verify packing accuracy values against the allowed 0-100% scale"
+    }
+  ]
+}
