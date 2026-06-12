@@ -1,6 +1,11 @@
-customer_id,name,email,amount,status
-1,Alice,alice@example.com,100,active
-2,Bob,,250,active
-3,Alice,alice@example.com,100,active
-4,,charlie@example.com,500,inactive
-5,Diana,,,-50
+order_id,warehouse_id,workflow_type,preparation_time_min,packing_accuracy_pct,delivery_complaints
+1001,W1,Picking,18,98.5,0
+1002,W2,Packaging,22,96.0,1
+1002,W2,Packaging,22,96.0,1
+1004,W3,Sorting,,88.0,2
+1005,,Picking,25,110.0,3
+1006,W1,Packaging,-5,94.0,0
+1007,W4,Packing,30,85.0,
+1008,W5,Picking,21,92.0,4
+1009,,Packing,19,,5
+1010,,Sorting,17,90.0,6
