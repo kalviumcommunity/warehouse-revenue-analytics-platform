@@ -1,55 +1,64 @@
+"""
+Data Profiling and Quality Assessment Script
+
+Computes comprehensive data quality metrics including:
+- Null percentages and duplicate counts
+- Numerical column statistics (min, max, mean, median, std)
+- Categorical column distributions
+- Data quality issues and recommendations
+"""
+
+import pandas as pd
+import numpy as np
 import json
 import os
 from pathlib import Path
 
-import numpy as np
-import pandas as pd
-
 
 def profile_nulls_and_duplicates(df):
     """
-    Compute null percentages and duplicate counts for each column.
+    Compute null percentage and duplicate counts per column.
+
+    Args:
+        df: pandas DataFrame to profile
 
     Returns:
-        dict: Null counts, null percentages, exact duplicate count, and duplicate percentage.
+        Dictionary with null analysis by column
     """
-    profile = {
-        "null_counts": {},
-        "null_percentages": {},
-        "exact_duplicate_count": 0,
-        "duplicate_percentage": 0.0,
-    }
+    profile = {"null_counts": {}, "null_percentages": {}, "exact_duplicate_count": 0}
 
     for col in df.columns:
-        null_count = int(df[col].isna().sum())
-        null_pct = round((null_count / len(df)) * 100, 2) if len(df) else 0.0
-        profile["null_counts"][col] = null_count
-        profile["null_percentages"][col] = null_pct
+        null_count = df[col].isna().sum()
+        null_pct = (null_count / len(df)) * 100
+        profile["null_counts"][col] = int(null_count)
+        profile["null_percentages"][col] = round(null_pct, 2)
 
-    duplicate_count = int(df.duplicated().sum())
-    profile["exact_duplicate_count"] = duplicate_count
-    profile["duplicate_percentage"] = round((duplicate_count / len(df)) * 100, 2) if len(df) else 0.0
+    profile["exact_duplicate_count"] = int(df.duplicated().sum())
+    profile["duplicate_percentage"] = round((df.duplicated().sum() / len(df)) * 100, 2)
 
     return profile
 
 
 def profile_numerical_columns(df):
     """
-    Summarize numerical columns with key statistics.
+    Summarise numerical columns with statistical measures.
+
+    Args:
+        df: pandas DataFrame to profile
 
     Returns:
-        pandas.DataFrame: Summary table for each numeric column.
+        DataFrame with min, max, mean, median, std for numerical columns
     """
     numerical_cols = df.select_dtypes(include=[np.number]).columns
 
     stats = {}
     for col in numerical_cols:
         stats[col] = {
-            "min": round(float(df[col].min()), 2) if not df[col].empty else None,
-            "max": round(float(df[col].max()), 2) if not df[col].empty else None,
-            "mean": round(float(df[col].mean()), 2) if not df[col].empty else None,
-            "median": round(float(df[col].median()), 2) if not df[col].empty else None,
-            "std": round(float(df[col].std()), 2) if not df[col].empty else None,
+            "min": round(float(df[col].min()), 2),
+            "max": round(float(df[col].max()), 2),
+            "mean": round(float(df[col].mean()), 2),
+            "median": round(float(df[col].median()), 2),
+            "std": round(float(df[col].std()), 2),
             "null_count": int(df[col].isnull().sum()),
         }
 
@@ -58,19 +67,22 @@ def profile_numerical_columns(df):
 
 def profile_categorical_columns(df, top_n=5):
     """
-    Summarize categorical columns with value distributions.
+    Summarise categorical columns with value distributions.
+
+    Args:
+        df: pandas DataFrame to profile
+        top_n: Number of top values to show for each column
 
     Returns:
-        dict: Unique counts, top values, and null counts for each categorical column.
+        Dictionary with unique counts and top values per categorical column
     """
-    categorical_cols = df.select_dtypes(include=['object', 'string']).columns
+    categorical_cols = df.select_dtypes(include=["object"]).columns
 
     profile = {}
     for col in categorical_cols:
-        value_counts = df[col].fillna("<NA>").value_counts().head(top_n)
         profile[col] = {
             "unique_count": int(df[col].nunique()),
-            "top_values": value_counts.to_dict(),
+            "top_values": df[col].value_counts().head(top_n).to_dict(),
             "null_count": int(df[col].isnull().sum()),
         }
 
@@ -79,110 +91,145 @@ def profile_categorical_columns(df, top_n=5):
 
 def identify_quality_issues(df, null_threshold=30, duplicate_threshold=5):
     """
-    Identify common data quality issues and recommend remediation.
+    Identify data quality problems based on thresholds.
+
+    Args:
+        df: pandas DataFrame to profile
+        null_threshold: Percentage threshold for high nulls (default: 30%)
+        duplicate_threshold: Percentage threshold for duplicates (default: 5%)
 
     Returns:
-        list: Issue records with severity and recommendation.
+        List of issues found with severity and recommendations
     """
     issues = []
 
+    # Check nulls
     null_pcts = (df.isnull().sum() / len(df)) * 100
     for col, pct in null_pcts.items():
-        if pct >= null_threshold:
-            issues.append({
-                "type": "High nulls",
-                "column": col,
+        if pct > null_threshold:
+            issues.append(
+                {
+                    "type": "High nulls",
+                    "column": col,
+                    "severity": "HIGH",
+                    "value": f"{pct:.1f}% missing",
+                    "recommendation": "Consider imputation or column exclusion",
+                }
+            )
+
+    # Check duplicates
+    dup_count = df.duplicated().sum()
+    dup_pct = (dup_count / len(df)) * 100
+    if dup_pct > duplicate_threshold:
+        issues.append(
+            {
+                "type": "High duplicates",
+                "column": "Full row",
                 "severity": "HIGH",
-                "value": f"{pct:.1f}% missing",
-                "recommendation": "Consider imputation or column exclusion before analysis",
-            })
+                "value": f"{dup_pct:.1f}% duplicated",
+                "recommendation": "Deduplication required before analysis",
+            }
+        )
 
-    duplicate_pct = (df.duplicated().sum() / len(df)) * 100 if len(df) else 0.0
-    if duplicate_pct >= duplicate_threshold:
-        issues.append({
-            "type": "High duplicates",
-            "column": "Full row",
-            "severity": "HIGH",
-            "value": f"{duplicate_pct:.1f}% duplicated",
-            "recommendation": "Deduplicate records before downstream analysis",
-        })
-
+    # Check for invalid ranges in numerical columns
     for col in df.select_dtypes(include=[np.number]).columns:
-        series = df[col]
-        if col in {"preparation_time_min", "delivery_complaints"}:
-            invalid = series[series < 0]
-            if not invalid.empty:
-                issues.append({
-                    "type": "Invalid range",
-                    "column": col,
-                    "severity": "HIGH",
-                    "value": f"{int(invalid.count())} negative value(s)",
-                    "recommendation": "Review and correct invalid negative business values",
-                })
-
-        if col == "packing_accuracy_pct":
-            invalid = series[(series < 0) | (series > 100)]
-            if not invalid.empty:
-                issues.append({
-                    "type": "Invalid range",
-                    "column": col,
-                    "severity": "HIGH",
-                    "value": f"{int(invalid.count())} out-of-range value(s)",
-                    "recommendation": "Verify packing accuracy values against the allowed 0-100% scale",
-                })
+        if col in df.columns:
+            # Check for negative values in columns that shouldn't have them
+            if (
+                "amount" in col.lower()
+                or "price" in col.lower()
+                or "quantity" in col.lower()
+            ):
+                if (df[col] < 0).any():
+                    neg_count = (df[col] < 0).sum()
+                    issues.append(
+                        {
+                            "type": "Invalid range",
+                            "column": col,
+                            "severity": "MEDIUM",
+                            "value": f"{neg_count} negative values",
+                            "recommendation": "Verify business logic - negative values may be invalid",
+                        }
+                    )
 
     return issues
 
 
-def build_report(df):
-    """Build a structured profiling report for JSON output."""
-    null_profile = profile_nulls_and_duplicates(df)
-    numerical_profile = profile_numerical_columns(df)
-    categorical_profile = profile_categorical_columns(df)
-    quality_issues = identify_quality_issues(df)
+def generate_quality_report(df, input_file_path):
+    """
+    Generate comprehensive data quality report.
 
+    Args:
+        df: pandas DataFrame to profile
+        input_file_path: Path to the input data file
+
+    Returns:
+        Dictionary containing complete quality report
+    """
     report = {
-        "dataset_shape": {
-            "rows": int(len(df)),
-            "columns": int(len(df.columns)),
+        "metadata": {
+            "source_file": input_file_path,
+            "total_rows": len(df),
+            "total_columns": len(df.columns),
+            "column_names": list(df.columns),
+            "data_types": df.dtypes.astype(str).to_dict(),
         },
-        "null_profile": null_profile,
-        "numerical_profile": numerical_profile.to_dict(orient="index"),
-        "categorical_profile": categorical_profile,
-        "quality_issues": quality_issues,
+        "nulls_and_duplicates": profile_nulls_and_duplicates(df),
+        "numerical_columns": profile_numerical_columns(df).to_dict(),
+        "categorical_columns": profile_categorical_columns(df),
+        "quality_issues": identify_quality_issues(df),
     }
 
     return report
 
 
-def save_report(report, output_path):
-    """Save the profiling report to disk."""
-    output_dir = os.path.dirname(output_path)
-    if output_dir:
-        os.makedirs(output_dir, exist_ok=True)
+def profile_ingested_data():
+    """
+    Main function to profile all ingested data files and generate reports.
+    """
+    base_path = Path(__file__).parent.parent
+    data_ingested_path = base_path / "data" / "processed"
+    output_path = base_path / "output"
 
-    with open(output_path, "w", encoding="utf-8") as handle:
-        json.dump(report, handle, indent=2)
+    # Create output directory if it doesn't exist
+    output_path.mkdir(parents=True, exist_ok=True)
 
+    # Files to profile
+    ingested_files = ["customers_ingested.csv", "transactions_ingested.csv"]
 
-def main():
-    base_dir = Path(__file__).resolve().parents[1]
-    input_path = base_dir / "data" / "raw" / "quality_test.csv"
-    output_path = base_dir / "output" / "profile_report.json"
+    all_reports = {}
 
-    if not input_path.exists():
-        raise FileNotFoundError(f"Input file not found: {input_path}")
+    for file_name in ingested_files:
+        file_path = data_ingested_path / file_name
 
-    df = pd.read_csv(input_path)
-    report = build_report(df)
-    save_report(report, output_path)
+        if file_path.exists():
+            print(f"\nProfiling: {file_name}")
+            df = pd.read_csv(file_path)
+            report = generate_quality_report(df, str(file_path))
+            all_reports[file_name] = report
 
-    print(f"Loaded {len(df)} rows from {input_path}")
-    print(f"Saved profiling report to {output_path}")
-    print("Quality issues:")
-    for issue in report["quality_issues"]:
-        print(f" - {issue['type']} | {issue['column']} | {issue['value']}")
+            # Print summary to console
+            print(f"  Total rows: {report['metadata']['total_rows']}")
+            print(f"  Total columns: {report['metadata']['total_columns']}")
+            print(
+                f"  Exact duplicates: {report['nulls_and_duplicates']['exact_duplicate_count']}"
+            )
+            print(
+                f"  Duplicate percentage: {report['nulls_and_duplicates']['duplicate_percentage']}%"
+            )
+            print(f"  Quality issues found: {len(report['quality_issues'])}")
+        else:
+            print(f"Warning: {file_name} not found at {file_path}")
+
+    # Save comprehensive report
+    report_output_path = output_path / "profile_report.json"
+    with open(report_output_path, "w") as f:
+        json.dump(all_reports, f, indent=2)
+
+    print(f"\n✓ Profile report saved to: {report_output_path}")
+
+    return all_reports
 
 
 if __name__ == "__main__":
-    main()
+    profile_ingested_data()
