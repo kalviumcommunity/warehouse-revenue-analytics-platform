@@ -1,0 +1,12 @@
+column_name,data_type,description,business_meaning,example_value,related_kpi,notes
+order_id,integer,Unique identifier for each order transaction,Order tracking and reconciliation key,1001,Order volume tracking,Primary key - never null - uniquely identifies each warehouse order
+customer_id,integer,Unique identifier linking to customer master,Customer identification for revenue attribution,1,Customer lifetime value,Foreign key to customers table - critical for revenue tracking and churn analysis
+warehouse_id,string,Warehouse location code where order was processed,Physical warehouse location identifier,W1,Warehouse efficiency score,Can be null for system failures - affects warehouse performance metrics
+amount,float,Transaction value in USD,Revenue per order,150.50,Monthly revenue / segment revenue,Currency in USD - never null for completed transactions - used for all revenue calculations
+status,string,Order fulfillment status,Current state of order through pipeline,completed,Order completion rate,Values: completed/pending/failed/cancelled - critical for distinguishing recognized revenue vs. pending
+workflow_type,string,Type of warehouse operation performed,Warehouse process classification,Picking,Workflow-specific KPIs,Values: Picking/Packaging/Sorting/Packing - used to segregate performance metrics by process type
+preparation_time_min,float,Minutes to prepare/process order at warehouse,Speed metric for warehouse operations,18.5,Order preparation velocity,Should be positive - null indicates incomplete workflow - higher values indicate bottlenecks
+packing_accuracy_pct,float,Percentage of items packed correctly,Quality metric for warehouse fulfillment,98.5,Packing accuracy rate / defect rate,Range 0-100% - values above 100% indicate data quality issues - directly impacts customer satisfaction
+delivery_complaints,integer,Count of complaints from this order,Customer satisfaction indicator,0,Complaint rate / customer retention,Values 0 or greater - null indicates missing data - used for quality trending and workflow impact analysis
+signup_date,datetime,Date customer created account,Customer acquisition timing,2025-01-15,Customer acquisition rate,ISO 8601 format YYYY-MM-DD - never null - used for cohort analysis and tenure calculations
+name,string,Customer full name,Customer identification in business context,Alice Johnson,Customer segmentation,Minimum 50 characters - can be null for anonymized data - used for customer communications and KYC
