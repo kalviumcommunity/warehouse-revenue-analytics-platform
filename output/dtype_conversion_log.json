@@ -1,0 +1,50 @@
+{
+  "date_conversion": {
+    "transaction_date": {
+      "status": "success",
+      "from": "str",
+      "to": "datetime64[ns]",
+      "format": "%Y-%m-%d"
+    },
+    "signup_date": {
+      "status": "success",
+      "from": "str",
+      "to": "datetime64[ns]",
+      "format": "%Y-%m-%d"
+    }
+  },
+  "currency_conversion": {
+    "amount": {
+      "status": "success",
+      "from": "str",
+      "to": "float64",
+      "failed_conversions": 0
+    },
+    "revenue": {
+      "status": "success",
+      "from": "str",
+      "to": "float64",
+      "failed_conversions": 0
+    }
+  },
+  "boolean_conversion": {
+    "is_active": {
+      "status": "success",
+      "from": "int64",
+      "to": "bool",
+      "unique_values": [
+        1,
+        0
+      ]
+    },
+    "is_premium": {
+      "status": "success",
+      "from": "int64",
+      "to": "bool",
+      "unique_values": [
+        0,
+        1
+      ]
+    }
+  }
+}
