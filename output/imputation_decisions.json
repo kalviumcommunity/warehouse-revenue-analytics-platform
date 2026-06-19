@@ -1,0 +1,20 @@
+{
+  "name": {
+    "column_type": "str",
+    "null_count_before": 1,
+    "null_percentage_before": 20.0,
+    "strategy": "mode_imputation",
+    "value_used": "Alice",
+    "business_reasoning": "Mode preserves the most common category and maintains category distribution without inventing a new label. This is appropriate for segment, category, or region fields.",
+    "risk_assessment": "Medium. Preserves distribution, but may over-represent the majority class if missingness is high."
+  },
+  "email": {
+    "column_type": "str",
+    "null_count_before": 2,
+    "null_percentage_before": 40.0,
+    "strategy": "drop_rows",
+    "rows_affected": 2,
+    "business_reasoning": "This identifier column is critical for traceability and downstream joins. Missing values indicate records cannot be reliably matched, so dropping them preserves data integrity.",
+    "risk_assessment": "Low. Only rows with missing critical identifiers are removed, preserving the remaining dataset."
+  }
+}
