@@ -1,0 +1,2 @@
+column,method,action,affected_rows,zscore_threshold,iqr_multiplier,date
+revenue,zscore+iqr,flag,1,3.0,1.5,2026-07-01T09:59:57.048874
