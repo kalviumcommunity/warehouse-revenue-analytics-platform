@@ -10,7 +10,23 @@ This script demonstrates reusable text cleaning operations for:
 
 from __future__ import annotations
 
+import re
+
 import pandas as pd
+
+
+def _transform_string_values(series: pd.Series, transform) -> pd.Series:
+    """Apply a text transform only to actual string values and preserve others."""
+    result = series.copy()
+    if result.empty:
+        return result
+
+    string_mask = result.apply(lambda value: isinstance(value, str))
+    if not string_mask.any():
+        return result
+
+    result.loc[string_mask] = result.loc[string_mask].apply(transform)
+    return result
 
 
 def strip_all_strings(df: pd.DataFrame) -> pd.DataFrame:
@@ -23,7 +39,7 @@ def strip_all_strings(df: pd.DataFrame) -> pd.DataFrame:
 
     for col in string_cols:
         before = df[col].nunique(dropna=True)
-        df[col] = df[col].astype("string").str.strip()
+        df[col] = _transform_string_values(df[col], lambda value: value.strip())
         after = df[col].nunique(dropna=True)
         print(f"{col}: {before} → {after} unique values")
 
@@ -36,7 +52,7 @@ def normalize_casing(df: pd.DataFrame, columns_to_lower: list[str]) -> pd.DataFr
         if col in df.columns and (
             pd.api.types.is_object_dtype(df[col]) or pd.api.types.is_string_dtype(df[col])
         ):
-            df[col] = df[col].astype("string").str.lower()
+            df[col] = _transform_string_values(df[col], lambda value: value.lower())
             print(f"Normalized {col} to lowercase")
 
     return df
@@ -49,7 +65,7 @@ def remove_special_characters(df: pd.DataFrame, columns: list[str]) -> pd.DataFr
         if col in df.columns and (
             pd.api.types.is_object_dtype(df[col]) or pd.api.types.is_string_dtype(df[col])
         ):
-            df[col] = df[col].astype("string").str.replace(pattern, "", regex=True)
+            df[col] = _transform_string_values(df[col], lambda value: re.sub(pattern, "", value))
             print(f"Removed special characters from {col}")
 
     return df
@@ -69,16 +85,18 @@ def clean_text_column(
         print(f"Warning: {result.isna().sum()} null values in column")
 
     if strip:
-        result = result.astype("string").str.strip()
+        result = _transform_string_values(result, lambda value: value.strip())
 
     if lowercase:
-        result = result.str.lower()
+        result = _transform_string_values(result, lambda value: value.lower())
 
     if remove_special:
-        result = result.str.replace(r"[^a-zA-Z0-9 ]", "", regex=True)
+        result = _transform_string_values(result, lambda value: re.sub(r"[^a-zA-Z0-9 ]", "", value))
 
     if mapping:
-        result = result.map(mapping)
+        string_mask = result.apply(lambda value: isinstance(value, str))
+        if string_mask.any():
+            result.loc[string_mask] = result.loc[string_mask].map(mapping)
 
     return result
 

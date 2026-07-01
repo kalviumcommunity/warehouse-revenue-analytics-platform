@@ -40,3 +40,17 @@ def test_deduplication_pipeline():
     comparison = compare_before_after(df, deduped_near)
     assert comparison["rows_before"] == 5
     assert comparison["rows_after"] == 3
+
+
+def test_empty_dataframe_is_handled_gracefully():
+    df = pd.DataFrame(columns=["customer_id", "transaction_date", "amount"])
+
+    exact_count, exact_rows = detect_exact_duplicates(df)
+    assert exact_count == 0
+    assert exact_rows.empty
+
+    deduped = remove_exact_duplicates(df, keep="first")
+    assert deduped.empty
+
+    deduped_near = remove_near_duplicates(deduped, key_columns=["customer_id"], keep_strategy="first")
+    assert deduped_near.empty

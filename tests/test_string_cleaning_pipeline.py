@@ -44,3 +44,17 @@ def test_string_cleaning_pipeline_standardizes_text_fields():
     assert result.iloc[1] == "product b"
     assert result.iloc[2] == "productc"
     assert pd.isna(result.iloc[3])
+
+
+def test_clean_text_column_handles_non_string_values():
+    result = clean_text_column(
+        pd.Series(["  Product A  ", None, 123, ""]),
+        lowercase=True,
+        strip=True,
+        remove_special=True,
+    )
+
+    assert result.iloc[0] == "product a"
+    assert pd.isna(result.iloc[1])
+    assert result.iloc[2] == 123
+    assert result.iloc[3] == ""
