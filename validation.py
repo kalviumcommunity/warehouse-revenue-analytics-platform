@@ -63,8 +63,9 @@ if "age" in df.columns:
     else:
         df["valid_age"] = pd.Series(True, index=df.index)
 
-    if "price" in df.columns:
-        df["valid_price"] = series_or_default(df, "price", 0) >= 0
+if "price" in df.columns:
+    price_num = pd.to_numeric(df["price"], errors="coerce")
+    df["valid_price"] = price_num >= 0
     else:
         df["valid_price"] = pd.Series(True, index=df.index)
 
