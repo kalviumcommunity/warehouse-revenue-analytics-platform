@@ -57,10 +57,9 @@ def main():
         if column_name in df.columns:
             df[column_name] = pd.to_datetime(df[column_name], errors="coerce")
 
-    if "age" in df.columns:
-        df["valid_age"] = (series_or_default(df, "age", 0) >= 0) & (
-            series_or_default(df, "age", 0) <= 150
-        )
+if "age" in df.columns:
+    age_num = pd.to_numeric(df["age"], errors="coerce")
+    df["valid_age"] = age_num.between(0, 150, inclusive="both")
     else:
         df["valid_age"] = pd.Series(True, index=df.index)
 
