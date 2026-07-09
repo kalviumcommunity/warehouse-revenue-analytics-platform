@@ -1,11 +1,14 @@
 import os
 import sys
 
+import numpy as np
 import pandas as pd
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from scripts.feature_engineering import (
+    add_vectorized_revenue_features,
+    benchmark_revenue_vectorization,
     engineer_operational_features,
     validate_engineered_features,
 )
@@ -62,3 +65,26 @@ def test_validate_engineered_features_reports_no_missing_values():
         "warehouse_health_score": 0,
     }
     assert validation["workflow_failure_score_range"][0] <= validation["workflow_failure_score_range"][1]
+
+
+def test_add_vectorized_revenue_features_creates_expected_columns():
+    df = pd.DataFrame({"revenue": [100, 200, 300, 400]})
+    result = add_vectorized_revenue_features(df)
+
+    assert "revenue_normalized" in result.columns
+    assert "revenue_zscore" in result.columns
+    assert "revenue_rank" in result.columns
+
+    np.testing.assert_allclose(result["revenue_normalized"].to_numpy(), [0.0, 1 / 3, 2 / 3, 1.0])
+    np.testing.assert_allclose(result["revenue_zscore"].to_numpy(), [-1.34164079, -0.4472136, 0.4472136, 1.34164079], atol=1e-6)
+    assert result["revenue_rank"].tolist() == [4.0, 3.0, 2.0, 1.0]
+
+
+def test_benchmark_revenue_vectorization_returns_timing_metrics():
+    df = pd.DataFrame({"revenue": [10, 20, 30, 40, 50]})
+    metrics = benchmark_revenue_vectorization(df)
+
+    assert set(metrics) == {"loop_time", "numpy_time", "speedup"}
+    assert metrics["loop_time"] >= 0
+    assert metrics["numpy_time"] >= 0
+    assert metrics["speedup"] >= 0

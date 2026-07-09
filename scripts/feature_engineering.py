@@ -14,6 +14,8 @@ Features created:
 
 from __future__ import annotations
 
+import time
+
 import numpy as np
 import pandas as pd
 
@@ -21,6 +23,74 @@ import pandas as pd
 def _safe_numeric(series: pd.Series) -> pd.Series:
     """Convert values to numeric, coercing invalid entries to NaN."""
     return pd.to_numeric(series, errors="coerce")
+
+
+def add_vectorized_revenue_features(
+    df: pd.DataFrame, revenue_column: str = "revenue"
+) -> pd.DataFrame:
+    """Add vectorized revenue normalization, z-score, and ranking columns."""
+    result = df.copy()
+    revenue = _safe_numeric(result[revenue_column])
+    revenue_array = revenue.to_numpy(dtype=float)
+    finite_mask = np.isfinite(revenue_array)
+
+    normalized_array = np.full(len(result), np.nan, dtype=float)
+    zscore_array = np.full(len(result), np.nan, dtype=float)
+    rank_array = np.full(len(result), np.nan, dtype=float)
+
+    if np.any(finite_mask):
+        numeric_values = revenue_array[finite_mask]
+        value_min = float(numeric_values.min())
+        value_max = float(numeric_values.max())
+        value_range = value_max - value_min
+
+        if value_range != 0:
+            normalized_array[finite_mask] = (
+                (numeric_values - value_min) / value_range
+            )
+        else:
+            normalized_array[finite_mask] = 0.0
+
+        value_mean = float(numeric_values.mean())
+        value_std = float(numeric_values.std(ddof=0))
+        if value_std != 0:
+            zscore_array[finite_mask] = (numeric_values - value_mean) / value_std
+        else:
+            zscore_array[finite_mask] = 0.0
+
+        order = np.argsort(-numeric_values, kind="mergesort")
+        dense_ranks = np.empty(len(numeric_values), dtype=float)
+        dense_ranks[order] = np.arange(1, len(numeric_values) + 1)
+        rank_array[finite_mask] = dense_ranks
+
+    result[f"{revenue_column}_normalized"] = normalized_array
+    result[f"{revenue_column}_zscore"] = zscore_array
+    result[f"{revenue_column}_rank"] = rank_array
+    return result
+
+
+def benchmark_revenue_vectorization(
+    df: pd.DataFrame, revenue_column: str = "revenue"
+) -> dict[str, float]:
+    """Compare loop-based revenue scaling with NumPy vectorization."""
+    revenue = _safe_numeric(df[revenue_column])
+
+    start = time.time()
+    loop_result = []
+    for value in revenue:
+        loop_result.append(float(value) * 1.1 if pd.notna(value) else np.nan)
+    loop_time = time.time() - start
+
+    start = time.time()
+    revenue_array = revenue.to_numpy(dtype=float)
+    numpy_result = revenue_array * 1.1
+    numpy_time = time.time() - start
+
+    return {
+        "loop_time": float(loop_time),
+        "numpy_time": float(numpy_time),
+        "speedup": float(loop_time / numpy_time) if numpy_time > 0 else float("inf"),
+    }
 
 
 def compute_preparation_rate(df: pd.DataFrame) -> pd.DataFrame:
@@ -130,6 +200,8 @@ def engineer_operational_features(df: pd.DataFrame) -> pd.DataFrame:
     result = compute_packing_accuracy_tier(result)
     result = compute_delivery_complaint_quartile(result)
     result = compute_workflow_scores(result)
+    if "revenue" in result.columns:
+        result = add_vectorized_revenue_features(result, revenue_column="revenue")
     return result
 
 
