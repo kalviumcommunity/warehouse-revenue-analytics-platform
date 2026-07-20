@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PRD — Warehouse Revenue Analytics Platform</title>
+<style>
+  :root {
+    --paper: #fffefb;
+    --page: #faf6ee;
+    --gold: #e8c77a;
+    --maroon: #7a1f2b;
+    --maroon-deep: #5c1620;
+    --rose: #f4dde2;
+    --ink: #2a2622;
+    --ink-soft: #5b564e;
+    --line: #ece4d3;
+    --check-bg: #1c1a17;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--page);
+    color: var(--ink);
+    font-family: Georgia, "Times New Roman", serif;
+    line-height: 1.6;
+  }
+  .wrap {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+  .sans {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+
+  /* ---- cover card ---- */
+  .cover {
+    background: var(--paper);
+    border-top: 5px solid var(--gold);
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 18px 40px -20px rgba(122,31,43,0.18);
+    padding: 44px 48px 40px;
+    margin-bottom: 48px;
+  }
+  .badge {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--rose);
+    display: grid;
+    place-items: center;
+    margin-bottom: 18px;
+  }
+  .badge svg { width: 28px; height: 28px; }
+  .cover h1 {
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--maroon);
+    margin: 0 0 6px;
+    letter-spacing: 0.01em;
+  }
+  .cover .subtitle {
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 17px;
+    margin: 0 0 30px;
+  }
+  .toc {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .toc li {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .toc a {
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: 500;
+  }
+  .toc a:hover { color: var(--maroon); }
+  .check {
+    flex: 0 0 auto;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--check-bg);
+    display: grid;
+    place-items: center;
+  }
+  .check svg { width: 13px; height: 13px; }
+  .cover-meta {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+
+  /* ---- content sections ---- */
+  section {
+    background: var(--paper);
+    border-radius: 6px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    padding: 32px 40px 34px;
+    margin-bottom: 22px;
+    scroll-margin-top: 20px;
+  }
+  section .eyebrow {
+    font-family: system-ui, sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--maroon);
+  }
+  section h2 {
+    font-size: 24px;
+    color: var(--maroon-deep);
+    margin: 6px 0 16px;
+  }
+  section p {
+    color: var(--ink);
+    max-width: 68ch;
+  }
+  section p.quote {
+    font-style: italic;
+    border-left: 3px solid var(--gold);
+    padding-left: 16px;
+    color: var(--ink-soft);
+  }
+  ul.plain, ol.plain {
+    padding-left: 20px;
+  }
+  ul.plain li, ol.plain li {
+    margin-bottom: 8px;
+  }
+  ul.checklist {
+    list-style: none;
+    padding: 0;
+    margin: 14px 0;
+  }
+  ul.checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-family: system-ui, sans-serif;
+    font-size: 14.5px;
+  }
+  ul.checklist .check { width: 20px; height: 20px; margin-top: 1px; }
+  ul.checklist .check svg { width: 10px; height: 10px; }
+  ul.checklist b { color: var(--ink); }
+  ul.checklist span.note { color: var(--ink-soft); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: system-ui, sans-serif;
+    font-size: 13.5px;
+    margin: 14px 0;
+  }
+  th, td {
+    text-align: left;
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  th {
+    color: var(--maroon);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 700;
+  }
+  tr:last-child td { border-bottom: none; }
+  code {
+    font-family: ui-monospace, Consolas, monospace;
+    background: var(--rose);
+    color: var(--maroon-deep);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 0.92em;
+  }
+
+  footer {
+    text-align: center;
+    font-family: system-ui, sans-serif;
+    font-size: 12px;
+    color: var(--ink-soft);
+    padding: 20px 0 0;
+  }
+
+  @media (max-width: 560px) {
+    .cover { padding: 30px 24px; }
+    section { padding: 24px 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="cover">
+    <div class="badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#1c1a17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="5" y="3" width="14" height="18" rx="2"></rect>
+        <path d="M9 3h6v2H9z"></path>
+        <path d="M8.5 12.5l2 2 4-4"></path>
+      </svg>
+    </div>
+    <h1>PRD</h1>
+    <p class="subtitle">Warehouse Revenue Analytics Platform — Product Requirements Document</p>
+
+    <div class="cover-meta sans">
+      Repo: github.com/kalviumcommunity/warehouse-revenue-analytics-platform &nbsp;·&nbsp; Status: v2 &nbsp;·&nbsp; Last updated 2026-07-20
+    </div>
+  </div>
+
+  <section id="problem">
+    <span class="eyebrow">01</span>
+    <h2>Problem Statement</h2>
+    <p class="quote">A grocery delivery startup tracks order preparation time, packing accuracy, and delivery complaints, but operations leads cannot identify which warehouse workflows create the highest downstream failure rates.</p>
+    <p>That's the flagship question, but it sits on top of a broader problem: the underlying data arrives messy and multi-format — CSV exports with inconsistent encodings, nested JSON transaction logs, duplicate records, missing values, currency strings instead of numbers, and outlier readings from WMS sync errors. None of that can be trusted for KPI reporting or workflow-failure analysis until it's been ingested, validated, cleaned, and structured consistently. This project is both things: a data pipeline that makes the raw operational data trustworthy, and a dashboard that uses the cleaned data to answer the operations question directly.</p>
+  </section>
+
+  <section id="goals">
+    <span class="eyebrow">02</span>
+    <h2>Goals</h2>
+    <table>
+      <tr><th>Goal</th><th>Evidence it's met</th></tr>
+      <tr><td><b>Trustworthy data.</b> Turn raw, inconsistent multi-format exports into a reliable, typed dataset.</td><td>Every pipeline stage writes an audit artifact to <code>output/</code> (intake report, dedup summary, dtype log, imputation decisions, cleaning log, profile report).</td></tr>
+      <tr><td><b>No ambiguity.</b> Remove ambiguity from column meaning before anyone builds a KPI on top of it.</td><td><code>docs/DATA_DICTIONARY.md</code> and <code>docs/COLUMN_TO_KPI_MAPPING.md</code> define every column, valid range, and KPI it feeds.</td></tr>
+      <tr><td><b>One clear answer.</b> Answer "which warehouse workflow fails most" so an operations lead can act on it in seconds.</td><td>The failure-risk dashboard surfaces one heatmap + two insight cards as the headline finding.</td></tr>
+      <tr><td><b>Explainable decisions.</b> Keep every pipeline decision explainable, not just automated.</td><td><code>handle_missing.py</code> and <code>outlier_detection.py</code> document <em>why</em> each decision was made.</td></tr>
+      <tr><td><b>Zero-friction review.</b> Ship something presentable with zero infrastructure setup.</td><td>Dashboard is static HTML/CSS/JS — opens directly in a browser.</td></tr>
+    </table>
+  </section>
+
+  <section id="users">
+    <span class="eyebrow">03</span>
+    <h2>Users</h2>
+    <ul class="checklist">
+      <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"></path></svg></span><span><b>Operations Lead</b> (primary) <span class="note">— needs a single answer to which warehouse × workflow to fix first.</span></span></li>
+      <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"></path></svg></span><span><b>Warehouse Manager</b> <span class="note">— needs their site's numbers in context against the other four.</span></span></li>
+      <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"></path></svg></span><span><b>Data Engineer / Contributor</b> <span class="note">— needs a modular pipeline each teammate can work on independently.</span></span></li>
+      <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"></path></svg></span><span><b>Mentor / Reviewer</b> <span class="note">— needs confidence every number traces to documented logic.</span></span></li>
+      <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"></path></svg></span><span><b>Finance / Revenue stakeholder</b> <span class="note">— needs the revenue distribution view (in progress, pending merge).</span></span></li>
+    </ul>
+  </section>
+
+  <section id="features">
+    <span class="eyebrow">04</span>
+    <h2>Features</h2>
+    <p>Built as a pipeline, stage by stage — each stage owned by a script with its own audit output. This reflects <code>main</code> as of this PRD, plus one teammate contribution still on a feature branch.</p>
+    <table>
+      <tr><th>Stage</th><th>Script</th><th>What it does</th></tr>
+      <tr><td>1. Ingestion</td><td><code>ingest_data.py</code></td><td>Multi-format CSV/JSON ingestion with encoding fallback and flattening.</td></tr>
+      <tr><td>2. Intake validation</td><td><code>validate_intake.py</code></td><td>File/format/schema checks, encoding detection, JSON report.</td></tr>
+      <tr><td>3. String cleaning</td><td><code>string_cleaning_pipeline.py</code></td><td>Trims, normalizes casing, strips special characters, maps category variants.</td></tr>
+      <tr><td>4. Deduplication</td><td><code>deduplicate_data.py</code></td><td>Exact + near-duplicate removal with a full audit trail.</td></tr>
+      <tr><td>5. Type enforcement</td><td><code>enforce_types.py</code></td><td>Dates, currency, booleans; before/after dtype report.</td></tr>
+      <tr><td>6. Missing values</td><td><code>handle_missing.py</code></td><td>Drop/median/mode/forward-fill, each documented with business reasoning.</td></tr>
+      <tr><td>7. Outlier detection</td><td><code>outlier_detection.py</code></td><td>Z-score + IQR flagging — never silently dropped.</td></tr>
+      <tr><td>8. Profiling</td><td><code>profile_data.py</code></td><td>Null/duplicate rates, stats, severity-ranked quality issues.</td></tr>
+      <tr><td>8b. Revenue distribution <em>(pending merge)</em></td><td><code>profile_data.py</code> (extended)</td><td>Skewness, kurtosis, percentiles, segment comparison plots.</td></tr>
+      <tr><td>9. Feature engineering</td><td><code>feature_engineering.py</code></td><td>Prep rate, accuracy tier, complaint quartile, warehouse health score, vectorized revenue features.</td></tr>
+      <tr><td>10. Dashboard</td><td><code>frontend/</code></td><td>Failure-risk heatmap, KPI tiles, insight cards, evidence charts.</td></tr>
+    </table>
+  </section>
+
+  <section id="schema">
+    <span class="eyebrow">05</span>
+    <h2>Data Schema</h2>
+    <p>Full definitions live in <code>docs/DATA_DICTIONARY.md</code>; KPI formulas in <code>docs/COLUMN_TO_KPI_MAPPING.md</code>.</p>
+    <table>
+      <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+      <tr><td><code>order_id</code></td><td>int</td><td>primary key</td></tr>
+      <tr><td><code>customer_id</code></td><td>int</td><td>FK to customer</td></tr>
+      <tr><td><code>warehouse_id</code></td><td>string</td><td>W1–W5</td></tr>
+      <tr><td><code>workflow_type</code></td><td>string</td><td>Picking, Packaging, Sorting, Packing</td></tr>
+      <tr><td><code>preparation_time_min</code></td><td>float</td><td>&gt;0, entry-to-completion minutes</td></tr>
+      <tr><td><code>packing_accuracy_pct</code></td><td>float</td><td>0–100 (values &gt;100 rejected as a known data-quality issue)</td></tr>
+      <tr><td><code>delivery_complaints</code></td><td>int</td><td>≥0, filed within 7 days</td></tr>
+      <tr><td><code>amount</code></td><td>float</td><td>USD order revenue</td></tr>
+      <tr><td><code>status</code></td><td>string</td><td>completed / pending / cancelled / failed</td></tr>
+      <tr><td><code>signup_date</code></td><td>date</td><td>ISO 8601, customer cohort</td></tr>
+    </table>
+    <p>Engineered by <code>feature_engineering.py</code>: <code>preparation_rate_per_hour</code>, <code>packing_accuracy_tier</code>, <code>delivery_complaint_quartile</code>, and the composite <code>warehouse_health_score</code> (0–100; <code>100 −</code> this is the dashboard's "failure risk %").</p>
+  </section>
+
+  <section id="dashboard">
+    <span class="eyebrow">06</span>
+    <h2>Dashboard Requirements</h2>
+    <p><b>Functional</b></p>
+    <ul class="plain">
+      <li>One page, three sections: problem + KPIs → failure-risk heatmap + insight cards → three evidence charts</li>
+      <li>Heatmap has a non-color-dependent fallback (table-view toggle)</li>
+      <li>Every chart mark has a hover tooltip with the underlying numbers</li>
+      <li>The two extremes of the heatmap are called out explicitly, not left for the viewer to find</li>
+    </ul>
+    <p><b>Non-functional</b></p>
+    <ul class="plain">
+      <li>Dark theme, committed — built for a presentation/projector context</li>
+      <li>No framework, no backend — static HTML/CSS/vanilla JS</li>
+      <li>Zero browser console errors on load</li>
+      <li>No dual-axis charts — different-unit measures always get separate charts</li>
+      <li>Responsive down to tablet width</li>
+      <li>Every number traceable to a documented formula or named function</li>
+    </ul>
+  </section>
+
+  <section id="metrics">
+    <span class="eyebrow">07</span>
+    <h2>Success Metrics</h2>
+    <p><b>Pipeline</b> — measured by each script's own output: schema-validation pass rate, duplicate removal rate (fully audited), null resolution rate, outlier flag rate, quality issues found by severity.</p>
+    <p><b>Dashboard</b> — a first-time viewer identifies the riskiest combination within 10 seconds unassisted; zero console errors; 100% of on-screen figures traceable to a documented formula.</p>
+    <p><b>Business</b> (aspirational, once run on real data) — complaint rate drops for the flagged worst-performing workflow after intervention; warehouse health score trends toward the 85+ target across all five warehouses within one quarter.</p>
+  </section>
+
+  <footer>Warehouse Revenue Analytics Platform — Product Requirements Document</footer>
+
+</div>
+</body>
+</html>

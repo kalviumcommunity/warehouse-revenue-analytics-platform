@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Workflow Comparison — Warehouse Revenue Analytics</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div id="tooltip"></div>
+
+<div class="app-shell">
+<aside class="sidebar">
+  <div class="brand">
+    <span class="brand-mark">W</span>
+    <span class="brand-name">Warehouse Revenue Analytics</span>
+  </div>
+  <nav class="sidebar-nav">
+      <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg><span class="side-label">Overview</span></a>
+      <a href="failure-risk.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg><span class="side-label">Failure Risk</span></a>
+      <a href="evidence.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V9"/><path d="M12 19V5"/><path d="M20 19v-6"/></svg><span class="side-label">Evidence</span></a>
+      <a href="warehouse.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 12l9 4 9-4"/><path d="M3 17l9 4 9-4"/></svg><span class="side-label">Warehouses</span></a>
+      <a href="workflow-comparison.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v18"/><path d="M17 3v18"/><path d="M3 8l4-4 4 4"/><path d="M21 16l-4 4-4-4"/></svg><span class="side-label">Workflow Comparison</span></a>
+      <a href="insights-actions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg><span class="side-label">Insights &amp; Actions</span></a>
+      <a href="methodology.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span class="side-label">Methodology</span></a>
+  </nav>
+</aside>
+<div class="page-main">
+<main class="container">
+
+  <section style="border-top: none; padding-top: 40px;">
+    <div class="section-head">
+      <div>
+        <span class="section-tag">Compare</span>
+        <h2 style="font-size: 26px;">Workflow comparison</h2>
+        <p>All four workflow stages, ranked by failure risk. Click a workflow for its per-warehouse breakdown.</p>
+      </div>
+    </div>
+
+    <div class="chart-card" style="margin-bottom: 16px;">
+      <p class="chart-title">Failure risk ranking</p>
+      <p class="chart-subtitle">Aggregated across all five warehouses</p>
+      <div id="chart-workflow-ranking"></div>
+    </div>
+
+    <div class="chart-card">
+      <p class="chart-title">Full comparison</p>
+      <table class="data-table" id="workflow-comparison-table">
+        <thead>
+          <tr><th>Workflow</th><th>Orders</th><th>Avg prep (min)</th><th>Accuracy %</th><th>Complaints/order</th><th>Failure risk %</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p>
+      Click through to <a href="workflow.html">Workflow Detail</a> for the per-warehouse view of any single workflow.
+      Dataset generated <span id="footer-date"></span>.
+    </p>
+  </footer>
+
+</main>
+</div>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

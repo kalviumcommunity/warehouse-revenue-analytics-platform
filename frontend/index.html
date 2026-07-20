@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Warehouse Revenue Analytics Platform</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div id="tooltip"></div>
+
+<div class="app-shell">
+<aside class="sidebar">
+  <div class="brand">
+    <span class="brand-mark">W</span>
+    <span class="brand-name">Warehouse Revenue Analytics</span>
+  </div>
+  <nav class="sidebar-nav">
+      <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg><span class="side-label">Overview</span></a>
+      <a href="failure-risk.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg><span class="side-label">Failure Risk</span></a>
+      <a href="evidence.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V9"/><path d="M12 19V5"/><path d="M20 19v-6"/></svg><span class="side-label">Evidence</span></a>
+      <a href="warehouse.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 12l9 4 9-4"/><path d="M3 17l9 4 9-4"/></svg><span class="side-label">Warehouses</span></a>
+      <a href="workflow-comparison.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v18"/><path d="M17 3v18"/><path d="M3 8l4-4 4 4"/><path d="M21 16l-4 4-4-4"/></svg><span class="side-label">Workflow Comparison</span></a>
+      <a href="insights-actions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg><span class="side-label">Insights &amp; Actions</span></a>
+      <a href="methodology.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span class="side-label">Methodology</span></a>
+  </nav>
+</aside>
+<div class="page-main">
+<main class="container">
+
+  <section class="hero" style="border-top: none; padding-top: 44px;">
+    <span class="eyebrow">Operations Analytics · Grocery Delivery</span>
+    <blockquote class="problem-quote">
+      A grocery delivery startup tracks order preparation time, packing accuracy, and
+      delivery complaints, but operations leads cannot identify which warehouse
+      workflows create the highest downstream failure rates.
+    </blockquote>
+    <p class="hero-sub">
+      This dashboard joins all three signals into one failure-risk model per
+      warehouse × workflow combination, scored against the KPI formulas and
+      targets documented in this repo — so the question above has a direct,
+      data-backed answer.
+    </p>
+    <div class="hero-meta" id="hero-meta"></div>
+    <div class="kpi-grid" id="kpi-grid"></div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <div>
+        <span class="section-tag">Overview dashboard</span>
+        <h2>Risk at a glance</h2>
+        <p>Same underlying data as the Failure Risk page, summarized three ways.</p>
+      </div>
+    </div>
+    <div class="dashboard-grid">
+      <div class="chart-card">
+        <p class="chart-title">Workflow risk ranking</p>
+        <p class="chart-subtitle">Failure risk %, worst to best</p>
+        <div id="chart-risk-ranking"></div>
+      </div>
+      <div class="chart-card">
+        <p class="chart-title">Failure rate by warehouse</p>
+        <p class="chart-subtitle">Failure risk %, worst to best</p>
+        <div id="chart-warehouse-risk"></div>
+      </div>
+    </div>
+    <div class="chart-card" style="margin-top: 16px;">
+      <p class="chart-title">Complaint share by workflow</p>
+      <p class="chart-subtitle">Share of total delivery complaints</p>
+      <div id="chart-complaint-share" style="max-width: 260px; margin: 0 auto;"></div>
+      <div class="legend" id="legend-complaint-share"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <div>
+        <span class="section-tag">Explore</span>
+        <h2>Where to go next</h2>
+        <p>Three views over the same dataset — the diagnosis, the evidence behind it, and a per-warehouse breakdown.</p>
+      </div>
+    </div>
+    <div class="quicklink-grid">
+      <a class="quicklink-card" href="failure-risk.html">
+        <div class="ql-tag">The Answer</div>
+        <h3>Failure risk by warehouse × workflow</h3>
+        <p>The heatmap and the two extremes — riskiest combination and best-practice benchmark.</p>
+      </a>
+      <a class="quicklink-card" href="evidence.html">
+        <div class="ql-tag">Why it fails there</div>
+        <h3>Three tracked signals, by workflow</h3>
+        <p>Prep time, accuracy, and complaint rate broken out side by side.</p>
+      </a>
+      <a class="quicklink-card" href="warehouse.html">
+        <div class="ql-tag">Drill down</div>
+        <h3>Per-warehouse detail</h3>
+        <p>Pick a warehouse and see its four workflows against the fleet average.</p>
+      </a>
+      <a class="quicklink-card" href="workflow-comparison.html">
+        <div class="ql-tag">Compare</div>
+        <h3>Workflow comparison</h3>
+        <p>All four workflows side by side, ranked by failure risk.</p>
+      </a>
+      <a class="quicklink-card" href="insights-actions.html">
+        <div class="ql-tag">Act on it</div>
+        <h3>Insights &amp; actions</h3>
+        <p>Concrete recommendations derived directly from the data above.</p>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <p>
+      <strong>Methodology.</strong> Order-level records are synthetically generated by
+      <code>assets/generate_fake_data.py</code>, with per-warehouse and per-workflow
+      bias factors calibrated to the benchmarks documented in
+      <code>docs/COLUMN_TO_KPI_MAPPING.md</code>. See the
+      <a href="methodology.html">Methodology page</a> for the full pipeline.
+      Dataset generated <span id="footer-date"></span>.
+    </p>
+  </footer>
+
+</main>
+</div>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
